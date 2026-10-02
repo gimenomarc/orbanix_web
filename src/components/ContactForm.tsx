@@ -1,24 +1,34 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
+import { assets } from '../data/assets';
 
-interface ContactFormProps {
-  initialType?: string;
-  assetId?: string;
-  assetTitle?: string;
-}
+export default function ContactForm() {
+  const searchParams = useSearchParams();
+  const initialType = searchParams.get('tipo') || 'general';
+  const assetId = searchParams.get('activo') || undefined;
+  const asset = assetId ? assets.find((a) => a.id === assetId) : undefined;
 
-export default function ContactForm({ initialType = 'general', assetId, assetTitle }: ContactFormProps) {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     phone: '',
     company: '',
     need: initialType === 'institucional' ? 'Gestión de cartera' : 'General',
-    message: assetTitle ? `Solicito información sobre el activo: ${assetTitle} (${assetId})` : '',
+    message: asset ? `Solicito información sobre el activo: ${asset.title} (${asset.reference})` : '',
     consent: false
   });
+
+  useEffect(() => {
+    if (asset) {
+      setFormData((prev) => ({
+        ...prev,
+        message: prev.message || `Solicito información sobre el activo: ${asset.title} (${asset.reference})`
+      }));
+    }
+  }, [asset]);
 
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
 
