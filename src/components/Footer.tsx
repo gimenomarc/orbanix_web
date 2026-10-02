@@ -12,8 +12,8 @@ export default function Footer() {
           <Image
             src="/media/logo.jpg"
             alt="ORBANIX GROUP"
-            width={104}
-            height={85}
+            width={550}
+            height={451}
             style={{ width: '100%', height: 'auto' }}
           />
         </Link>
@@ -33,6 +33,7 @@ export default function Footer() {
           <Link href="/legal">Aviso legal</Link>
           <Link href="/privacidad">Privacidad</Link>
           <Link href="/cookies">Cookies</Link>
+          <Link href="/acceso-crm">Acceso CRM</Link>
         </nav>
       </div>
     </footer>

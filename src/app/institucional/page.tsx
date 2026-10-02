@@ -66,17 +66,19 @@ export default function InstitucionalPage() {
         </Link>
       </section>
 
-      <section className="section institutional-band">
-        <p className="eyebrow">MANDATOS & CARTERAS</p>
-        <h2>
-          Estructuración discreta.<br />
-          <em>Interlocución directiva.</em>
-        </h2>
-        <p>
-          Coordinamos procesos de adquisición y desinversión con estricto compromiso de confidencialidad y solvencia técnica.
-        </p>
-        <Link href="/contacto?tipo=institucional" className="button outline">
-          Contactar con el equipo Institucional <span aria-hidden="true">↗</span>
+      <section className="section private-band">
+        <div>
+          <p className="eyebrow">CLIENTES INSTITUCIONALES RECURRENTES</p>
+          <h2>
+            Su relación con ORBANIX.<br />
+            <em>En un espacio reservado.</em>
+          </h2>
+          <p>
+            Oportunidades, documentación y seguimiento a través de ORBANIX Private.
+          </p>
+        </div>
+        <Link href="/area-privada" className="button outline">
+          Acceder a ORBANIX Private <span aria-hidden="true">↗</span>
         </Link>
       </section>
     </>

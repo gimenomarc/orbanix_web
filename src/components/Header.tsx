@@ -21,8 +21,8 @@ export default function Header() {
           <Image
             src="/media/logo.jpg"
             alt="ORBANIX GROUP"
-            width={104}
-            height={85}
+            width={550}
+            height={451}
             priority
             style={{ width: '100%', height: 'auto' }}
           />
@@ -56,6 +56,14 @@ export default function Header() {
               </Link>
             );
           })}
+          <Link
+            className="private-link"
+            href="/area-privada"
+            aria-current={pathname.startsWith('/area-privada') ? 'page' : undefined}
+            onClick={closeMenu}
+          >
+            Área privada <span aria-hidden="true">↗</span>
+          </Link>
         </nav>
       </header>
     </>
