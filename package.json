@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "build:zip": "next build && powershell -Command \"Compress-Archive -Path 'out/*' -DestinationPath 'orbanix_web_nuvolink.zip' -Force\"",
+    "build:zip": "next build && powershell -Command \"if (Test-Path orbanix_web_nuvolink.zip) { Remove-Item orbanix_web_nuvolink.zip -Force }; Push-Location out; tar.exe -a -cf ..\\orbanix_web_nuvolink.zip *; Pop-Location\"",
     "start": "next start",
     "lint": "eslint"
   },
