@@ -19,12 +19,12 @@ export default function Header() {
       <header className="header">
         <Link className="brand" href="/" aria-label="ORBANIX GROUP, inicio" onClick={closeMenu}>
           <Image
-            src="/media/logo.jpg"
+            src="/media/logo-removebg-preview.png"
             alt="ORBANIX GROUP"
             width={550}
-            height={451}
+            height={452}
             priority
-            style={{ width: '100%', height: 'auto' }}
+            style={{ width: '100%', height: 'auto', display: 'block' }}
           />
         </Link>
 

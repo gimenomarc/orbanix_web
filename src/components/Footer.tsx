@@ -10,11 +10,11 @@ export default function Footer() {
       <div className="footer-top">
         <Link href="/" className="brand" aria-label="Inicio">
           <Image
-            src="/media/logo.jpg"
+            src="/media/logo-removebg-preview.png"
             alt="ORBANIX GROUP"
             width={550}
-            height={451}
-            style={{ width: '100%', height: 'auto' }}
+            height={452}
+            style={{ width: '100%', height: 'auto', display: 'block' }}
           />
         </Link>
         <p>

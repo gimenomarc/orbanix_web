@@ -11,7 +11,11 @@ export const metadata: Metadata = {
   description: 'ORBANIX GROUP. Real Estate, Investment y Advisory en Catalunya. Building Value, Creating Legacy.',
   keywords: ['Real Estate Catalunya', 'Inversión inmobiliaria Barcelona', 'Asesoramiento inmobiliario', 'Family office', 'Patrimonio'],
   icons: {
-    icon: '/favicon.svg'
+    icon: [
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+      { url: '/media/logo-removebg-preview.png', type: 'image/png' }
+    ],
+    apple: '/media/logo-removebg-preview.png'
   },
   openGraph: {
     title: 'ORBANIX GROUP · Real Estate, Investment & Advisory',

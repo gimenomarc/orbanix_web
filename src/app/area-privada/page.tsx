@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -26,6 +27,15 @@ export default function AreaPrivadaPage() {
       </div>
 
       <div className="private-access-card" id="auth-card" data-mode="login">
+        <div style={{ width: '60px', marginBottom: '18px' }}>
+          <Image
+            src="/media/logo-removebg-preview.png"
+            alt="ORBANIX GROUP"
+            width={550}
+            height={452}
+            style={{ width: '100%', height: 'auto', display: 'block' }}
+          />
+        </div>
         <p className="eyebrow">ACCESO DE CLIENTES</p>
         <h2>Acceda a su espacio.</h2>
         <div className="notice" role="status">

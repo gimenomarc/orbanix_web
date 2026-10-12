@@ -11,33 +11,42 @@ export default function ContactForm() {
   const assetId = searchParams.get('activo') || undefined;
   const asset = assetId ? assets.find((a) => a.id === assetId) : undefined;
 
+  const getInitialNeed = () => {
+    if (initialType === 'institucional') return 'Gestión de cartera';
+    if (initialType === 'visita') return 'Solicitud de visita';
+    if (initialType === 'informacion') return 'Información de activo';
+    if (initialType === 'private') return 'Acceso a ORBANIX Private';
+    return 'General';
+  };
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     phone: '',
     company: '',
-    need: initialType === 'institucional' ? 'Gestión de cartera' : 'General',
-    message: asset ? `Solicito información sobre el activo: ${asset.title} (${asset.reference})` : '',
-    consent: false
+    need: getInitialNeed(),
+    message: asset ? `Solicito información sobre el activo: ${asset.title} (Ref: ${asset.reference})` : '',
+    consent: false,
   });
+
+  const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
+  const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
     if (asset) {
       setFormData((prev) => ({
         ...prev,
-        message: prev.message || `Solicito información sobre el activo: ${asset.title} (${asset.reference})`
+        message: prev.message || `Solicito información sobre el activo: ${asset.title} (Ref: ${asset.reference})`,
       }));
     }
   }, [asset]);
-
-  const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target;
     const checked = (e.target as HTMLInputElement).checked;
     setFormData((prev) => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : value
+      [name]: type === 'checkbox' ? checked : value,
     }));
   };
 
@@ -46,20 +55,57 @@ export default function ContactForm() {
     if (!formData.consent) return;
 
     setStatus('submitting');
-    // Simulate direct contact handling or API call
-    setTimeout(() => {
+    setErrorMessage('');
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ...formData,
+          assetId: asset?.id,
+          assetTitle: asset?.title,
+          assetRef: asset?.reference,
+          type: initialType,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Ocurrió un error al enviar el formulario.');
+      }
+
       setStatus('success');
-    }, 600);
+    } catch (err: any) {
+      console.error(err);
+      setStatus('error');
+      setErrorMessage(err.message || 'No se pudo enviar la consulta. Por favor, inténtelo de nuevo o contacte directamente a info@orbanixgroup.com.');
+    }
   };
 
   if (status === 'success') {
     return (
-      <div className="notice" role="status" style={{ padding: '36px', background: '#192820', borderLeftColor: '#c6aa75' }}>
-        <strong style={{ fontSize: '20px', color: '#c6aa75' }}>Consulta enviada correctamente</strong>
-        <p style={{ marginTop: '14px', fontSize: '15px', color: '#edece5' }}>
-          Gracias por contactar con <strong>ORBANIX GROUP</strong>. Nuestro equipo de Real Estate & Advisory revisará su solicitud con estricta confidencialidad y se pondrá en contacto en breve.
+      <div
+        className="notice"
+        role="status"
+        style={{
+          padding: '36px',
+          background: '#192820',
+          borderLeftColor: '#c6aa75',
+          borderRadius: '4px',
+        }}
+      >
+        <strong style={{ fontSize: '20px', color: '#c6aa75', display: 'block' }}>
+          Consulta enviada correctamente
+        </strong>
+        <p style={{ marginTop: '14px', fontSize: '15px', color: '#edece5', lineHeight: 1.6 }}>
+          Gracias por contactar con <strong>ORBANIX GROUP</strong>. Nuestro equipo de Real Estate & Advisory revisará su solicitud con estricta confidencialidad y se pondrá en contacto con usted a la mayor brevedad.
         </p>
         <button
+          type="button"
           className="button gold"
           style={{ marginTop: '24px' }}
           onClick={() => {
@@ -71,7 +117,7 @@ export default function ContactForm() {
               company: '',
               need: 'General',
               message: '',
-              consent: false
+              consent: false,
             });
           }}
         >
@@ -83,20 +129,30 @@ export default function ContactForm() {
 
   const isInstitutional = initialType === 'institucional';
   const isVisit = initialType === 'visita';
+  const isPrivate = initialType === 'private';
+
+  const formLegend = isInstitutional
+    ? 'Propuesta institucional'
+    : isVisit
+    ? 'Solicitud de visita'
+    : isPrivate
+    ? 'Solicitud de acceso ORBANIX Private'
+    : 'Su consulta';
 
   return (
     <form id="contact-form" onSubmit={handleSubmit}>
       <fieldset disabled={status === 'submitting'}>
-        <legend>
-          {isInstitutional
-            ? 'Propuesta institucional'
-            : isVisit
-            ? 'Solicitud de visita'
-            : 'Su consulta'}
-        </legend>
+        <legend>{formLegend}</legend>
+
+        {status === 'error' && (
+          <div className="notice error" role="alert" style={{ marginBottom: '22px' }}>
+            <strong>Aviso:</strong> {errorMessage}
+          </div>
+        )}
+
         <div className="form-grid">
           <label>
-            Nombre *
+            Nombre completo *
             <input
               name="name"
               value={formData.name}
@@ -108,7 +164,7 @@ export default function ContactForm() {
             />
           </label>
           <label>
-            Email *
+            Email de contacto *
             <input
               name="email"
               type="email"
@@ -143,7 +199,7 @@ export default function ContactForm() {
               placeholder="Nombre de su entidad o family office"
             />
           </label>
-          {isInstitutional && (
+          {isInstitutional ? (
             <label className="full">
               Área de interés
               <select name="need" value={formData.need} onChange={handleChange}>
@@ -155,7 +211,21 @@ export default function ContactForm() {
                 <option>Otro</option>
               </select>
             </label>
+          ) : (
+            <label className="full">
+              Tipo de solicitud
+              <select name="need" value={formData.need} onChange={handleChange}>
+                <option value="General">Consulta General</option>
+                <option value="Información de activo">Información de Activo</option>
+                <option value="Solicitud de visita">Solicitud de Visita</option>
+                <option value="Gestión de cartera">Gestión de Cartera / Inversión</option>
+                <option value="Mandato de desinversión">Mandato de Desinversión</option>
+                <option value="Acceso a ORBANIX Private">Acceso a ORBANIX Private</option>
+                <option value="Otro">Otro</option>
+              </select>
+            </label>
           )}
+
           <label className="full">
             Mensaje *
             <textarea
@@ -184,7 +254,13 @@ export default function ContactForm() {
         </label>
 
         <button className="button gold" type="submit" disabled={!formData.consent || status === 'submitting'}>
-          {status === 'submitting' ? 'Enviando consulta…' : isVisit ? 'Solicitar visita' : 'Enviar consulta'}{' '}
+          {status === 'submitting'
+            ? 'Enviando consulta…'
+            : isVisit
+            ? 'Solicitar visita'
+            : isPrivate
+            ? 'Solicitar acceso'
+            : 'Enviar consulta'}{' '}
           <span aria-hidden="true">↗</span>
         </button>
       </fieldset>
