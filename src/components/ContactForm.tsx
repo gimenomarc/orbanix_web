@@ -117,11 +117,11 @@ export default function ContactForm() {
           borderRadius: '4px',
         }}
       >
-        <strong style={{ fontSize: '20px', color: '#c6aa75', display: 'block' }}>
-          Consulta enviada correctamente
+        <strong style={{ fontSize: '22px', color: '#c6aa75', display: 'block', fontFamily: 'var(--serif)' }}>
+          Hemos recibido su solicitud
         </strong>
-        <p style={{ marginTop: '14px', fontSize: '15px', color: '#edece5', lineHeight: 1.6 }}>
-          Gracias por contactar con <strong>ORBANIX GROUP</strong>. Nuestro equipo de Real Estate & Advisory revisará su solicitud con estricta confidencialidad y se pondrá en contacto con usted a la mayor brevedad.
+        <p style={{ marginTop: '14px', fontSize: '15px', color: '#edece5', lineHeight: 1.7 }}>
+          Revisaremos su consulta con la máxima discreción y estricta confidencialidad. Nos pondremos en contacto con usted a la mayor brevedad para ofrecerle una atención personalizada y adaptada a sus objetivos.
         </p>
         <button
           type="button"
