@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "build:zip": "next build && powershell -Command \"Compress-Archive -Path 'out/*' -DestinationPath 'orbanix_web_nuvolink.zip' -Force\"",
     "start": "next start",
     "lint": "eslint"
   },

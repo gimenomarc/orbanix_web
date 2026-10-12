@@ -58,19 +58,38 @@ export default function ContactForm() {
     setErrorMessage('');
 
     try {
-      const response = await fetch('/api/contact', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          ...formData,
-          assetId: asset?.id,
-          assetTitle: asset?.title,
-          assetRef: asset?.reference,
-          type: initialType,
-        }),
-      });
+      const payload = {
+        ...formData,
+        assetId: asset?.id,
+        assetTitle: asset?.title,
+        assetRef: asset?.reference,
+        type: initialType,
+      };
+
+      let response: Response | null = null;
+
+      // 1. En Nuvolink / Plesk (hosting de producción), el endpoint es /contact.php
+      try {
+        const phpRes = await fetch('/contact.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        if (phpRes.ok) {
+          response = phpRes;
+        }
+      } catch {
+        // Fallback a /api/contact si no está disponible PHP
+      }
+
+      // 2. Si no respondió PHP (ej. en desarrollo local de Next.js), recurre a /api/contact
+      if (!response) {
+        response = await fetch('/api/contact', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+      }
 
       const data = await response.json();
 
